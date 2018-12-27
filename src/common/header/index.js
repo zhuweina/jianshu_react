@@ -20,23 +20,64 @@ import { actionCreators } from './store/'
 
 class Header extends Component {
   getAreaList() {
-    if (this.props.focused) {
+    const {
+      focused,
+      list,
+      page,
+      totalPage,
+      mouseIn,
+      handleMouseEnter,
+      handlePageChange
+    } = this.props
+    let showItems
+    const newList = list.toJS()
+    if (newList.length) {
+      showItems = []
+      for (let i = (page - 1) * 10; i < page * 10; i++) {
+        showItems.push(<SearchItem key={newList[i]}>{newList[i]}</SearchItem>)
+      }
+    } else {
+      showItems = <span>暂无推荐</span>
+    }
+    if (focused || mouseIn) {
       return (
-        <SearchInfo>
+        <SearchInfo
+          onMouseEnter={() => {
+            handleMouseEnter(true)
+          }}
+          onMouseLeave={() => {
+            handleMouseEnter(false)
+          }}
+        >
           <SearchInfoTitle>
-            热门搜索<SearchInfoSwitch>换一批</SearchInfoSwitch>
+            热门搜索
+            <SearchInfoSwitch
+              onClick={() => {
+                handlePageChange(page, totalPage, this.spinIcon)
+              }}
+            >
+              <i
+                className="iconfont spin"
+                ref={icon => {
+                  this.spinIcon = icon
+                }}
+              >
+                &#xe858;
+              </i>
+              换一批
+            </SearchInfoSwitch>
           </SearchInfoTitle>
           <SearchInfoList>
             {/* 这个map是immutable的map，不是普通的map ，因为imuutable对象也提供了这样的方法*/}
-            {this.props.list.map((item, index) => (
-              <SearchItem key={index}>{item}</SearchItem>
-            ))}
+            {showItems}
           </SearchInfoList>
         </SearchInfo>
       )
     }
   }
   render() {
+    const { focused, handleInputFocusChange, list, recommendGot } = this.props
+
     return (
       <HeaderWrapper>
         <Logo />
@@ -45,25 +86,21 @@ class Header extends Component {
           <NavItem className="left">下载App</NavItem>
           <NavItem className="right">登陆</NavItem>
           <NavItem className="right">
-            <i className="iconfont">&#xe636;</i>
+            <i className="iconfont zoom">&#xe636;</i>
           </NavItem>
           <SearchWrapper>
-            <CSSTransition
-              timeout={300}
-              in={this.props.focused}
-              classNames="slide"
-            >
+            <CSSTransition timeout={300} in={focused} classNames="slide">
               <NavSearch
-                className={this.props.focused ? 'focused' : ''}
+                className={focused ? 'focused' : ''}
                 onFocus={() => {
-                  this.props.handleInputFocusChange(true)
+                  handleInputFocusChange(true, recommendGot)
                 }}
                 onBlur={() => {
-                  this.props.handleInputFocusChange(false)
+                  handleInputFocusChange(false, recommendGot)
                 }}
               />
             </CSSTransition>
-            <i className={this.props.focused ? 'focused iconfont' : 'iconfont'}>
+            <i className={focused ? 'focused iconfont zoom' : 'iconfont zoom'}>
               &#xe60c;
             </i>
             {this.getAreaList()}
@@ -71,7 +108,7 @@ class Header extends Component {
         </Nav>
         <Addition>
           <Button className="writing">
-            <i className="iconfont">&#xe624;</i>
+            <i className="iconfont zoom">&#xe624;</i>
             写文章
           </Button>
           <Button className="reg">注册</Button>
@@ -83,17 +120,40 @@ class Header extends Component {
 
 const mapStateToProps = state => {
   return {
-    focused: state.getIn(['header', 'focesed']),
-    list: state.get('header').get('list')
+    focused: state.get('header').get('focused'), //getIn????
+    list: state.get('header').get('list'),
+    page: state.get('header').get('page'),
+    totalPage: state.get('header').get('totalPage'),
+    mouseIn: state.get('header').get('mouseIn'),
+    recommendGot: state.get('header').get('recommendGot')
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    handleInputFocusChange(focused) {
+    handleInputFocusChange(focused, recommendGot) {
       dispatch(actionCreators.changeSearchFocused(focused))
       if (focused) {
-        dispatch(actionCreators.getList())
+        !recommendGot && dispatch(actionCreators.getList())
       }
+    },
+    handleMouseEnter(entered) {
+      dispatch(actionCreators.changeMouseEnter(entered))
+    },
+    handlePageChange(page, totalPage, spinIcon) {
+      let originAngle = spinIcon.style.transform.replace(/[^0-9]/g, '')
+      if (originAngle) {
+        originAngle = parseInt(originAngle, 10)
+      } else {
+        originAngle = 0
+      }
+      spinIcon.style.transform = `rotate(${originAngle + 360}deg)`
+      let newPage
+      if (page < totalPage) {
+        newPage = page + 1
+      } else {
+        newPage = 1
+      }
+      dispatch(actionCreators.changePage(newPage))
     }
   }
 }
