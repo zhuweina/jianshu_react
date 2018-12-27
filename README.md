@@ -171,6 +171,12 @@ import { combineReducers } from 'redux-immutable'
 
 发送 ajax 请求，支持 async
 
+### react-router-dom
+
+```
+import { BrowserRouter, Route } from 'react-router-dom'
+```
+
 ### 遗留问题
 
 - 原生 js 获取 style，为什么获取不到 transform？

@@ -33,7 +33,7 @@ class Header extends Component {
     const newList = list.toJS()
     if (newList.length) {
       showItems = []
-      for (let i = (page - 1) * 10; i < page * 10; i++) {
+      for (let i = (page - 1) * 10; i < Math.min(page * 10, list.size); i++) {
         showItems.push(<SearchItem key={newList[i]}>{newList[i]}</SearchItem>)
       }
     } else {
@@ -76,7 +76,7 @@ class Header extends Component {
     }
   }
   render() {
-    const { focused, handleInputFocusChange, list, recommendGot } = this.props
+    const { focused, handleInputFocusChange, recommendGot } = this.props
 
     return (
       <HeaderWrapper>
