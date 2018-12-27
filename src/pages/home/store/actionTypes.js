@@ -1,2 +1,2 @@
-export const GET_LIST = 'get_list'
-export const CHANGE_LIST = 'change_list'
+export const GET_LIST = 'home/get_list'
+export const CHANGE_LIST = 'home/change_list'
