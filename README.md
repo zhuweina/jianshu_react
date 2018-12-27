@@ -1,5 +1,4 @@
-###该项目的框架/库清单
-
+### 该项目的框架/库清单
 - create-react-app
 - Styled-Components
 - react-transition-group
@@ -9,32 +8,26 @@
 - redux-thunk
 - axios
 
-### 安装 create-react-app
+#### create-react-app
 
+__安装create-react-app并利用create-react-app初始化一个项目__
 ```
 npm install -g create-react-app
 create-react-app jianshu-react
 ```
-
-或者
-
+或者直接使用npx
 ```
 npx create-react-app jianshu-react
 ```
-
-### 启动
-
+ __启动项目__
+ 在项目根目录下执行
 ```
-yarn start
+yarn start 
 ```
-
 或者
-
 ```
 npm run start
 ```
-
-### 使用的第三方框架
 
 #### Styled-Components
 
@@ -69,21 +62,21 @@ ReactDOM.render(
 
 #### react-transition-group
 
-1. 创建 store 文件夹，并在 store 文件夹下创建 index.js，在这个 index.jss 文件里创建 store 实例
-
+1. 在根目录下创建 store 文件夹，并在 store 文件夹下创建 index.js，在这个 index.js文件里创建 store 实例，该文件路径为`/store/index.js`
 ```
 import { createStore } from 'redux'
 const store = createStore(reducer)
 export default store
 ```
-
-2. createStore 方法需要传入一个 reducer，因此再创建一个 reducer.js
-
+2. createStore 方法需要传入一个 reducer，因此在store文件夹下创建一个 reducer.js，该文件路径为`/store/reducer.js`
+这个reducer.js要整合所有其他的reducer模块，使用`combineReducers`方法
 ```
-export default (state, action) => {
-  ...
-  return state
-}
+import { combineReducers } from 'redux'
+import headerReducer from '../common/header/store'
+
+export default combineReducers({
+  header: headerReducer
+})
 
 ```
 
@@ -167,15 +160,3 @@ import { combineReducers } from 'redux-immutable'
 
 发送 ajax 请求，支持 async
 
-### 拆分 reducer，并用 combineReducers 整合后导出
-
-防止 reducer.js 越来约庞大和不可维护
-
-```
-import { combineReducers } from 'redux'
-import headerReducer from '../common/header/store/reducer'
-
-export default combineReducers({
-  header: headerReducer
-})
-```
