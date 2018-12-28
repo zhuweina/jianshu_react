@@ -181,4 +181,4 @@ import { BrowserRouter, Route } from 'react-router-dom'
 
 - 原生 js 获取 style，为什么获取不到 transform？
 - combinereducer 的原理？是给每个子 reducer 都派发，还是需要写完全不同的 actionType？
-- fromJS 对于多层对象，是每一层都变成 immutable 吗？
+- fromJS 对于多层对象，是每一层都变成 immutable，List 只能把一层变成 immutable，Merge 也是只能把一层变成 immutable 吗？
