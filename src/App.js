@@ -6,6 +6,8 @@ import store from './store'
 import { BrowserRouter, Route } from 'react-router-dom'
 import Home from './pages/home'
 import Detail from './pages/detail'
+import Login from './pages/login/loadable'
+import Write from './pages/write'
 
 class App extends Component {
   render() {
@@ -17,7 +19,9 @@ class App extends Component {
             <div>
               <Header />
               <Route path="/" exact render={() => <Home />} />
-              <Route path="/detail" exact render={() => <Detail />} />
+              <Route path="/detail/:id" exact render={() => <Detail />} />
+              <Route path="/login" exact render={() => <Login />} />
+              <Route path="/write" exact render={() => <Write />} />
             </div>
           </BrowserRouter>
         </Provider>

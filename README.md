@@ -9,7 +9,7 @@
 - redux-thunk
 - axios
 
-####create-react-app
+#### create-react-app
 
 **安装 create-react-app 并利用 create-react-app 初始化一个项目**
 
@@ -174,11 +174,44 @@ import { combineReducers } from 'redux-immutable'
 ### react-router-dom
 
 ```
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route,Link } from 'react-router-dom'
 ```
+
+#### 路由参数的获取
+
+- 动态路由
+
+```
+ <Route path="/detail/:id" exact render={() => <Detail />} />
+```
+
+```
+<Link key={item.get('id')} to={`/detail/${item.get('id')}`}></Link>
+```
+
+```
+this.props.match.id
+```
+
+- 查询字符串
+
+```
+<Route path="/detail" exact render={() => <Detail />} />
+```
+
+```
+<Link key={item.get('id')} to={`/detail?id=${item.get('id')}`}></Link>
+```
+
+```
+this.props.location.search
+```
+
+### react-loadable
 
 ### 遗留问题
 
 - 原生 js 获取 style，为什么获取不到 transform？
 - combinereducer 的原理？是给每个子 reducer 都派发，还是需要写完全不同的 actionType？
 - fromJS 对于多层对象，是每一层都变成 immutable，List 只能把一层变成 immutable，Merge 也是只能把一层变成 immutable 吗？
+- styled-components 中的 innerRef？

@@ -18,6 +18,7 @@ import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { actionCreators } from './store/'
 import { Link } from 'react-router-dom'
+import { actionCreators as loginCreator } from '../../pages/login/store'
 
 class Header extends Component {
   getAreaList() {
@@ -77,7 +78,13 @@ class Header extends Component {
     }
   }
   render() {
-    const { focused, handleInputFocusChange, recommendGot } = this.props
+    const {
+      focused,
+      handleInputFocusChange,
+      recommendGot,
+      login,
+      logout
+    } = this.props
 
     return (
       <HeaderWrapper>
@@ -87,7 +94,16 @@ class Header extends Component {
         <Nav>
           <NavItem className="left active">首页</NavItem>
           <NavItem className="left">下载App</NavItem>
-          <NavItem className="right">登陆</NavItem>
+          {login ? (
+            <NavItem className="right" onClick={logout}>
+              退出
+            </NavItem>
+          ) : (
+            <Link to={'/login'}>
+              <NavItem className="right">登陆</NavItem>
+            </Link>
+          )}
+
           <NavItem className="right">
             <i className="iconfont zoom">&#xe636;</i>
           </NavItem>
@@ -110,10 +126,12 @@ class Header extends Component {
           </SearchWrapper>
         </Nav>
         <Addition>
-          <Button className="writing">
-            <i className="iconfont zoom">&#xe624;</i>
-            写文章
-          </Button>
+          <Link to="/write">
+            <Button className="writing">
+              <i className="iconfont zoom">&#xe624;</i>
+              写文章
+            </Button>
+          </Link>
           <Button className="reg">注册</Button>
         </Addition>
       </HeaderWrapper>
@@ -128,7 +146,8 @@ const mapStateToProps = state => {
     page: state.get('header').get('page'),
     totalPage: state.get('header').get('totalPage'),
     mouseIn: state.get('header').get('mouseIn'),
-    recommendGot: state.get('header').get('recommendGot')
+    recommendGot: state.get('header').get('recommendGot'),
+    login: state.get('login').get('login')
   }
 }
 const mapDispatchToProps = dispatch => {
@@ -157,6 +176,10 @@ const mapDispatchToProps = dispatch => {
         newPage = 1
       }
       dispatch(actionCreators.changePage(newPage))
+    },
+    logout() {
+      console.log(loginCreator)
+      dispatch(loginCreator.changeLogin(false))
     }
   }
 }
